@@ -52,4 +52,41 @@ Task.getTaskById = function (taskId, result) {
         }
     });
 };
+
+Task.auth=function (req,username,password, result) {
+
+    sql.query('SELECT * FROM users WHERE user_name = ? AND password = ?',
+                                         [username, password], function(error, res) {
+
+            if (error) {
+                console.log("error: ", error);
+                result(error,null);
+            }
+            else {
+                if (!res[0]) {
+
+                    req.session.loggedin = false;
+                    result(error,null);
+                } 
+                else {
+                           
+            req.session.loggedin = true;
+            req.session.username = username;
+            result(null,res);
+        
+		        }		
+
+    }});
+
+
+}
+
+
+
+
+
+
+
+
+
 module.exports = Task;
